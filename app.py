@@ -18,7 +18,21 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-st.title("GitHub README Chatbot")
+# Get the repository URL from the environment variable
+default_repo_url = os.getenv("DEFAULT_REPO_URL", "https://github.com/ignasf5/chatbot")  # Default fallback if not set
+
+# Get the values from environment variables
+page_title = os.getenv("PAGE_TITLE", "Chatbot")
+title = os.getenv("TITLE", "GitHub README Chatbot")
+
+st.set_page_config(
+    page_title=page_title,
+    page_icon="🧊",
+    layout="centered",
+    initial_sidebar_state="expanded",
+)
+
+st.title(title)
 
 st.markdown(
             r"""
@@ -279,11 +293,7 @@ def generate_bot_response(prompt, chatbot, vectorizer, section_vectors, threshol
     logger.debug(f"Generated response: {response[:100]}...")  # Log first 100 characters of the response
     return response
 
-# Get the repository URL from the environment variable
-default_repo_url = os.getenv("DEFAULT_REPO_URL", "https://github.com/ignasf5/chatbot")  # Default fallback if not set
-
 # Load the default repository
-# default_repo_url = "https://github.com/ignasf5/chatbot"
 primary_resources = fetch_and_process_repository(default_repo_url)
 if not primary_resources:
     logger.error(f"Failed to load primary resources for {default_repo_url}")
