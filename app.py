@@ -299,6 +299,16 @@ if not primary_resources:
     logger.error(f"Failed to load primary resources for {default_repo_url}")
     st.stop()
 
+# Show the raw README.md content
+readme_content = fetch_readme_from_github(default_repo_url)
+if st.checkbox("Show raw README.md content"):
+    st.code(readme_content, language="markdown")
+
+# Extract chatbot instance for parsed sections
+combined_chatbot, _, _ = primary_resources
+if st.checkbox("Show parsed sections"):
+    st.write(combined_chatbot.sections)
+
 st.session_state.primary_resources = primary_resources
 
 # Allow the user to add another repository
