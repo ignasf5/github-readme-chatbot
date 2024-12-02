@@ -4,6 +4,16 @@ FROM python:3.13.0
 # Set the working directory in the container
 WORKDIR /app
 
+# Set environment variables
+ENV DEFAULT_REPO_URL="https://github.com/ignasf5/chatbot"
+
+# Default to INFO, but you can change it when running the container
+ENV LOG_LEVEL=INFO
+
+# Set environment variables for dynamic values
+ENV PAGE_TITLE="Chatbot"
+ENV TITLE="GitHub README Chatbot"
+
 # Install dependencies
 COPY requirements.txt /app/
 
