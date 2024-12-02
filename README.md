@@ -76,4 +76,19 @@ Slow response times: The first time a repository is processed, it may take a mom
 
 ![image](https://github.com/user-attachments/assets/d37d6d80-073c-48a5-9e55-db6bc76a2b03)
 
+## Content check
+
+```
+# Show the raw README.md content
+readme_content = fetch_readme_from_github(default_repo_url)
+if st.checkbox("Show raw README.md content"):
+    st.code(readme_content, language="markdown")
+
+# Extract chatbot instance for parsed sections
+combined_chatbot, _, _ = primary_resources
+if st.checkbox("Show parsed sections"):
+    st.write(combined_chatbot.sections)
+```
+
+![image](https://github.com/user-attachments/assets/0d7cf296-53ac-44f5-84c9-7eaa0ebb9918)
 
