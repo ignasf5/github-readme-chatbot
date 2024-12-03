@@ -27,7 +27,7 @@ title = os.getenv("TITLE", "GitHub README Chatbot")
 
 st.set_page_config(
     page_title=page_title,
-    page_icon="🧊",
+    page_icon="🤖",
     layout="centered",
     initial_sidebar_state="expanded",
 )
@@ -56,21 +56,6 @@ if "messages" not in st.session_state:
     st.session_state.messages = []
 if "additional_repo_message" not in st.session_state:
     st.session_state.additional_repo_message = ""
-
-# Class for the chatbot that processes README content
-import logging
-import re
-from sklearn.metrics.pairwise import cosine_similarity
-from sklearn.feature_extraction.text import TfidfVectorizer
-from markdown import markdown
-from bs4 import BeautifulSoup
-
-# Configure logging
-logging.basicConfig(
-    level=logging.DEBUG,  # Set log level to DEBUG for detailed logs
-    format='%(asctime)s - %(levelname)s - %(message)s',
-)
-logger = logging.getLogger(__name__)
 
 # Class for the chatbot that processes README content
 class ReadmeChatbot:
@@ -287,7 +272,7 @@ def generate_bot_response(prompt, chatbot, vectorizer, section_vectors, threshol
     if results:
         response = "Here are the top matches:\n\n"
         for i, (title, text, score) in enumerate(results[:3]):  # Limit to top 3 results
-            response += f"**{i + 1}. {title}** (Score: {score:.2f})\n{text[:300]}...\n\n"
+            response += f"**{i + 1}. {title}** (Score: {score:.2f})\n{text[:500]}...\n\n"
     else:
         response = "Sorry, I couldn't find any relevant information."
     logger.debug(f"Generated response: {response[:100]}...")  # Log first 100 characters of the response
