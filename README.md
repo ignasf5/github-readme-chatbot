@@ -9,6 +9,7 @@ This Streamlit application allows users to interact with a GitHub repository's `
 - **Interactive Chatbot**: Ask questions about the repository's `README.md` content.
 - **Multiple Repository Support**: Fetch and combine content from multiple GitHub repositories.
 - **Natural Language Processing**: The chatbot uses TF-IDF and cosine similarity to find relevant answers from the repository documentation.
+- **Image parser**: Content with images will be displayed.
 
 ## Installation
 
@@ -29,6 +30,7 @@ This Streamlit application allows users to interact with a GitHub repository's `
   ```
   docker run -p 8501:8501 -e DEFAULT_REPO_URL="https://github.com/another/repository" github-readme-chatbot
   ```
+Or run through terminale ```streamlit run ./app.py```
    
 ## How it Works
 
@@ -91,4 +93,11 @@ if st.checkbox("Show parsed sections"):
 ```
 
 ![image](https://github.com/user-attachments/assets/0d7cf296-53ac-44f5-84c9-7eaa0ebb9918)
+
+
+## Additionaly 
+Implementeded image parser.
+
+![image](https://github.com/user-attachments/assets/501da4af-8bb6-4bed-8e78-c886655a897f)
+
 

@@ -9,7 +9,7 @@ from markdown import markdown
 from bs4 import BeautifulSoup
 
 # Get the logging level from the environment variable (default to 'INFO')
-log_level = os.getenv('LOG_LEVEL', 'INFO').upper()
+log_level = os.getenv('LOG_LEVEL', 'DEBUG').upper()
 
 # Configure logging
 logging.basicConfig(
@@ -56,6 +56,21 @@ if "messages" not in st.session_state:
     st.session_state.messages = []
 if "additional_repo_message" not in st.session_state:
     st.session_state.additional_repo_message = ""
+
+# Class for the chatbot that processes README content
+import logging
+import re
+from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.feature_extraction.text import TfidfVectorizer
+from markdown import markdown
+from bs4 import BeautifulSoup
+
+# Configure logging
+logging.basicConfig(
+    level=logging.DEBUG,  # Set log level to DEBUG for detailed logs
+    format='%(asctime)s - %(levelname)s - %(message)s',
+)
+logger = logging.getLogger(__name__)
 
 # Class for the chatbot that processes README content
 class ReadmeChatbot:
@@ -109,16 +124,19 @@ class ReadmeChatbot:
         current_section = "Introduction"  # Default section if no header is found
         sections[current_section] = []  # Start the first section
 
-        # Iterate through the parsed HTML content to find headers and paragraphs
-        for element in soup.find_all(['h1', 'h2', 'h3', 'p', 'li']):
+        # Iterate through the parsed HTML content to find headers and content
+        for element in soup.find_all(['h1', 'h2', 'h3', 'p', 'li', 'img']):
             if element.name in ['h1', 'h2', 'h3']:  # New section header found
                 current_section = element.text.strip()  # Update the current section
                 sections[current_section] = []  # Start a new section
+            elif element.name == 'img':  # Image found
+                img_url = element['src']
+                sections[current_section].append(f"![Image]({img_url})")  # Markdown for image
             else:
-                sections[current_section].append(element.text.strip())  # Add content under the current section
+                sections[current_section].append(element.text.strip())  # Add text content
 
         logger.debug(f"Parsed README into {len(sections)} sections.")
-        return {k: ' '.join(v) for k, v in sections.items()}  # Combine paragraphs in each section
+        return {k: ' '.join(v) for k, v in sections.items()}  # Combine paragraphs and images in each section
 
     def search_query(self, query, vectorizer, section_vectors, threshold=0.1):
         """
@@ -266,22 +284,24 @@ def combine_resources(primary, additional):
 
 # Generate a response from the chatbot
 def generate_bot_response(prompt, chatbot, vectorizer, section_vectors, threshold=0.1):
-    """Generate a response based on the user's query."""
-    logger.debug(f"Generating bot response for prompt: {prompt}")
     results = chatbot.search_query(prompt, vectorizer, section_vectors, threshold=threshold)
     if results:
-        response = "Here are the top matches:\n\n"
-        for i, (title, text, score) in enumerate(results[:3]):  # Limit to top 3 results
-            response += f"**{i + 1}. {title}** (Score: {score:.2f})\n{text[:500]}...\n\n"
+        response = ""
+        for i, (title, text, score) in enumerate(results[:3]):
+            response += f"### {i + 1}. {title} (Score: {score:.2f})\n\n{text[:300]}...\n\n"
+            image_urls = re.findall(r'!\[Image]\((.*?)\)', text)
+            for img_url in image_urls:
+                response += f"![Image]({img_url})\n\n"
     else:
         response = "Sorry, I couldn't find any relevant information."
-    logger.debug(f"Generated response: {response[:100]}...")  # Log first 100 characters of the response
     return response
+
 
 # Load the default repository
 primary_resources = fetch_and_process_repository(default_repo_url)
 if not primary_resources:
     logger.error(f"Failed to load primary resources for {default_repo_url}")
+    st.error("Failed to load the default repository.")
     st.stop()
 
 # Show the raw README.md content
