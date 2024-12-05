@@ -14,6 +14,9 @@ ENV LOG_LEVEL=INFO
 ENV PAGE_TITLE="Chatbot"
 ENV TITLE="GitHub README Chatbot"
 
+# Set the number of characters to return.
+ENV SUMMARY_MAX_LENGTH=500
+
 # Install dependencies
 COPY requirements.txt /app/
 

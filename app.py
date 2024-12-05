@@ -21,6 +21,9 @@ logger = logging.getLogger(__name__)
 # Get the repository URL from the environment variable
 default_repo_url = os.getenv("DEFAULT_REPO_URL", "https://github.com/ignasf5/chatbot")  # Default fallback if not set
 
+# Get the max summary length from the environment variable (default to 500 if not set)
+max_summary_length = int(os.getenv("SUMMARY_MAX_LENGTH", "500"))
+
 # Get the values from environment variables
 page_title = os.getenv("PAGE_TITLE", "Chatbot")
 title = os.getenv("TITLE", "GitHub README Chatbot")
@@ -288,7 +291,7 @@ def generate_bot_response(prompt, chatbot, vectorizer, section_vectors, threshol
     if results:
         response = ""
         for i, (title, text, score) in enumerate(results[:3]):
-            response += f"### {i + 1}. {title} (Score: {score:.2f})\n\n{text[:300]}...\n\n"
+            response += f"### {i + 1}. {title} (Score: {score:.2f})\n\n{text[:max_summary_length]}...\n\n"
             image_urls = re.findall(r'!\[Image]\((.*?)\)', text)
             for img_url in image_urls:
                 response += f"![Image]({img_url})\n\n"
