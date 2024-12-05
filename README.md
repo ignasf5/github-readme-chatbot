@@ -31,7 +31,12 @@ This Streamlit application allows users to interact with a GitHub repository's `
   docker run -p 8501:8501 -e DEFAULT_REPO_URL="https://github.com/another/repository" github-readme-chatbot
   ```
 Or run through terminale ```streamlit run ./app.py```
-   
+
+Set the number of characters to return.
+```
+ENV SUMMARY_MAX_LENGTH=500
+```
+
 ## How it Works
 
 **Key Components**
