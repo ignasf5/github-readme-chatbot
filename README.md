@@ -15,7 +15,7 @@ This Streamlit application allows users to interact with a GitHub repository's `
 
 1. Clone the repository to your local machine:
   ```bash
-  git clone https://github.com/yourusername/github-readme-chatbot.git
+  git clone https://github.com/ignasf5/github-readme-chatbot.git
   cd github-readme-chatbot
   ```
 2. Build image
