@@ -61,21 +61,6 @@ if "additional_repo_message" not in st.session_state:
     st.session_state.additional_repo_message = ""
 
 # Class for the chatbot that processes README content
-import logging
-import re
-from sklearn.metrics.pairwise import cosine_similarity
-from sklearn.feature_extraction.text import TfidfVectorizer
-from markdown import markdown
-from bs4 import BeautifulSoup
-
-# Configure logging
-logging.basicConfig(
-    level=logging.DEBUG,  # Set log level to DEBUG for detailed logs
-    format='%(asctime)s - %(levelname)s - %(message)s',
-)
-logger = logging.getLogger(__name__)
-
-# Class for the chatbot that processes README content
 class ReadmeChatbot:
     """
     A chatbot that processes a README.md file, parses it into sections, 
